@@ -10,13 +10,13 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from asyncio import timeout
 from collections import deque
 from datetime import datetime, timedelta
 from random import random
 from typing import Any
 
 import aiohttp
-import async_timeout
 
 from aiopvpc.const import (
     ALL_SENSORS,
@@ -176,7 +176,7 @@ class PVPCData:
         Prices are referenced with datetimes in UTC.
         """
         try:
-            async with async_timeout.timeout(self._timeout):
+            async with timeout(self._timeout):
                 return await self._api_get_data(sensor_key, url)
         except (AttributeError, KeyError) as exc:
             _LOGGER.debug("[%s] Bad try on getting prices (%s)", sensor_key, exc)
